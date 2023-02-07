@@ -1,7 +1,8 @@
 <?php
 
-namespace Mkk\Component\Notifier\Bridge\Ntfy;
+namespace Mkk\NtfyBundle\Tests;
 
+use Mkk\NtfyBundle\Message\NtfyOptions;
 use PHPUnit\Framework\TestCase;
 
 class NtfyOptionsTest extends TestCase

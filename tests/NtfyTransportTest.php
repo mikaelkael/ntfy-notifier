@@ -1,19 +1,21 @@
 <?php
 
-namespace Mkk\Component\Notifier\Bridge\Ntfy;
+namespace Mkk\NtfyBundle\Tests;
 
+use Mkk\NtfyBundle\Transport\NtfyTransport;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\Notifier\Message\MessageInterface;
 use Symfony\Component\Notifier\Message\PushMessage;
 use Symfony\Component\Notifier\Message\SmsMessage;
 use Symfony\Component\Notifier\Test\TransportTestCase;
+use Symfony\Component\Notifier\Transport\TransportInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class NtfyTransportTest extends TransportTestCase
 {
 
-    public function createTransport(HttpClientInterface $client = null): NtfyTransport
+    public function createTransport(HttpClientInterface $client = null): TransportInterface
     {
         return new NtfyTransport('test', $client ?? $this->createMock(HttpClientInterface::class));
     }
@@ -60,8 +62,8 @@ class NtfyTransportTest extends TransportTestCase
             ->willReturn(json_encode(['id' => '2BYIwRmvBKcv', 'event' => 'message']));
 
         $client = new MockHttpClient(function (string $method, string $url, array $options = []) use ($response): ResponseInterface {
-            $expectedBody = json_encode(['title' => 'Hello', 'message' => 'World']);
-            $this->assertJsonStringEqualsJsonString($expectedBody, $options['content']);
+            $expectedBody = json_encode(['topic' => 'test', 'title' => 'Hello', 'message' => 'World']);
+            $this->assertJsonStringEqualsJsonString($expectedBody, $options['body']);
 
             return $response;
         });
@@ -84,9 +86,9 @@ class NtfyTransportTest extends TransportTestCase
             ->willReturn(json_encode(['id' => '2BYIwRmvBKcv', 'event' => 'message']));
 
         $client = new MockHttpClient(function (string $method, string $url, array $options = []) use ($response): ResponseInterface {
-            $expectedBody = json_encode(['title' => 'Hello', 'message' => 'World']);
+            $expectedBody = json_encode(['topic' => 'test', 'title' => 'Hello', 'message' => 'World']);
             $expectedAuthorization = "Authorization: Basic dGVzdF91c2VyOnRlc3RfcGFzc3dvcmQ";
-            $this->assertJsonStringEqualsJsonString($expectedBody, $options['content']);
+            $this->assertJsonStringEqualsJsonString($expectedBody, $options['body']);
             $this->assertTrue(in_array($expectedAuthorization, $options['headers']));
 
             return $response;

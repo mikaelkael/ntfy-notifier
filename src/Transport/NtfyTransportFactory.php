@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Mkk\Component\Notifier\Bridge\Ntfy;
+namespace Mkk\NtfyBundle\Transport;
 
 use Symfony\Component\Notifier\Exception\UnsupportedSchemeException;
 use Symfony\Component\Notifier\Transport\AbstractTransportFactory;

@@ -1,13 +1,15 @@
 <?php
 
-namespace Mkk\Component\Notifier\Bridge\Ntfy;
+namespace Mkk\NtfyBundle\Tests;
 
+use Mkk\NtfyBundle\Transport\NtfyTransportFactory;
 use Symfony\Component\Notifier\Test\TransportFactoryTestCase;
+use Symfony\Component\Notifier\Transport\TransportFactoryInterface;
 
 class NtfyTransportFactoryTest extends TransportFactoryTestCase
 {
 
-    public function createFactory(): NtfyTransportFactory
+    public function createFactory(): TransportFactoryInterface
     {
         return new NtfyTransportFactory();
     }

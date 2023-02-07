@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: false
+
+  Mkk\NtfyBundle\Transport\NtfyTransportFactory:
+    tags: ['texter.transport_factory']

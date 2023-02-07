@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Mkk\Component\Notifier\Bridge\Ntfy;
+namespace Mkk\NtfyBundle\Transport;
 
+use Mkk\NtfyBundle\Message\NtfyOptions;
 use Symfony\Component\Notifier\Exception\LogicException;
 use Symfony\Component\Notifier\Exception\TransportException;
 use Symfony\Component\Notifier\Exception\TransportExceptionInterface;
@@ -73,6 +74,8 @@ final class NtfyTransport extends AbstractTransport
 
         $options = $opts ? $opts->toArray() : [];
 
+        $options['topic'] = $this->getTopic();
+
         if (!isset($options['title'])) {
             $options['title'] = $message->getSubject();
         }
@@ -80,7 +83,7 @@ final class NtfyTransport extends AbstractTransport
             $options['message'] = $message->getContent();
         }
 
-        $headers = ['Content-Type' => 'application/json'];
+        $headers = [];
 
         if (null !== $this->user && null !== $this->password) {
             $headers['Authorization'] = 'Basic '.rtrim(base64_encode($this->user.':'.$this->password), '=');
@@ -88,7 +91,7 @@ final class NtfyTransport extends AbstractTransport
 
         $response = $this->client->request('POST', ($this->isSecureHttp() ? 'https' : 'http').'://'.$this->getEndpoint(), [
             'headers' => $headers,
-            'content' => json_encode($options),
+            'json' => $options,
         ]);
 
         try {

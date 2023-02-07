@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Mkk\Component\Notifier\Bridge\Ntfy;
+namespace Mkk\NtfyBundle\Message;
 
 use Symfony\Component\Notifier\Message\MessageOptionsInterface;
 use Symfony\Component\Notifier\Notification\Notification;
@@ -26,15 +26,13 @@ final class NtfyOptions implements MessageOptionsInterface
         $options = new self();
         $options->setTitle($notification->getSubject());
         $options->setMessage($notification->getContent());
-
+        $options->setStringPriority($notification->getImportance());
+        $options->addTag($notification->getEmoji());
         return $options;
     }
 
     public function toArray(): array
     {
-        if (isset($this->options['tags'])) {
-            $this->options['tags'] = implode(',', $this->options['tags']);
-        }
         return $this->options;
     }
 
@@ -55,6 +53,20 @@ final class NtfyOptions implements MessageOptionsInterface
         return $this;
     }
 
+    public function setStringPriority(string $priority): self
+    {
+        switch ($priority) {
+            case Notification::IMPORTANCE_URGENT:
+                return $this->setPriority(self::PRIORITY_URGENT);
+            case Notification::IMPORTANCE_HIGH:
+                return $this->setPriority(self::PRIORITY_HIGH);
+            case Notification::IMPORTANCE_LOW:
+                return $this->setPriority(self::PRIORITY_LOW);
+            default:
+                return $this->setPriority(self::PRIORITY_DEFAULT);
+        }
+    }
+
     public function setPriority(int $priority): self
     {
         if (in_array($priority, [
@@ -62,6 +74,12 @@ final class NtfyOptions implements MessageOptionsInterface
         ])) {
             $this->options['priority'] = $priority;
         }
+        return $this;
+    }
+
+    public function addTag(string $tag): self
+    {
+        $this->options['tags'][] = $tag;
         return $this;
     }
 
@@ -83,7 +101,7 @@ final class NtfyOptions implements MessageOptionsInterface
         return $this;
     }
 
-    public function addActions(array $action): self
+    public function addAction(array $action): self
     {
         $this->options['actions'][] = $action;
         return $this;
@@ -95,21 +113,21 @@ final class NtfyOptions implements MessageOptionsInterface
         return $this;
     }
 
-    public function setAttachments(array $attachments): self
+    public function setAttachment(string $attachment): self
     {
-        $this->options['attach'] = $attachments;
+        $this->options['attach'] = $attachment;
         return $this;
     }
 
-    public function addAttachment(string $attachment): self
+    public function setFilename(string $filename): self
     {
-        $this->options['attach'][] = $attachment;
+        $this->options['filename'] = $filename;
         return $this;
     }
 
-    public function setIcon(string $url): self
+    public function setEmail(string $email): self
     {
-        $this->options['icon'] = $url;
+        $this->options['email'] = $email;
         return $this;
     }
 
