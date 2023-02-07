@@ -1,6 +1,9 @@
 Ntfy Notifier
 =============
 
+[![Build Status](https://github.com/mikaelkael/ntfy-notifier/workflows/Build/badge.svg)](https://github.com/mikaelkael/ntfy-notifier/actions)
+[![License](https://poser.pugx.org/mikaelkael/ntfy-notifier/license.png)](https://packagist.org/packages/mikaelkael/ntfy-notifier)
+
 Provides [Ntfy](https://docs.ntfy.sh/) integration for Symfony Notifier.
 
 DSN example
