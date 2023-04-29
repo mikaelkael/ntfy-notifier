@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Mkk\NtfyBundle\Transport;
@@ -17,15 +18,17 @@ final class NtfyTransportFactory extends AbstractTransportFactory
         }
 
         $host = 'default' === $dsn->getHost() ? null : $dsn->getHost();
-        $topic = substr($dsn->getPath(), 1);
-        $transport = (new NtfyTransport($topic))->setHost($host);
-        if (!empty($port = $dsn->getPort())) {
-            $transport->setPort($port);
+        $topic = \substr($dsn->getPath(), 1);
+
+        if (\in_array($dsn->getOption('secureHttp', true), [0, false, 'false', 'off', 'no'])) {
+            $secureHttp = false;
+        } else {
+            $secureHttp = true;
         }
 
-        $secureHttp = $dsn->getOption('secureHttp', true);
-        if (in_array($secureHttp, [0, false, 'false', 'off', 'no'])) {
-            $transport->setSecureHttp(false);
+        $transport = (new NtfyTransport($topic, $secureHttp))->setHost($host);
+        if (!empty($port = $dsn->getPort())) {
+            $transport->setPort($port);
         }
 
         if (!empty($user = $dsn->getUser()) && !empty($password = $dsn->getPassword())) {

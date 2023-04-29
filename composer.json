@@ -12,6 +12,7 @@
   ],
   "require": {
     "php": ">=7.4",
+    "ext-json": "*",
     "symfony/framework-bundle": "^5.4|^6.0",
     "symfony/http-client": "^5.0|^6.0",
     "symfony/notifier": "^5.4|^6.0"

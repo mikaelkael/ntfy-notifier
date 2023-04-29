@@ -1,20 +1,21 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Mkk\NtfyBundle\Message;
 
+use Symfony\Component\Notifier\Exception\LogicException;
 use Symfony\Component\Notifier\Message\MessageOptionsInterface;
 use Symfony\Component\Notifier\Notification\Notification;
 
 final class NtfyOptions implements MessageOptionsInterface
 {
     private array $options;
-    const PRIORITY_MAX = 5;
-    const PRIORITY_URGENT = 5;
-    const PRIORITY_HIGH = 4;
-    const PRIORITY_DEFAULT = 3;
-    const PRIORITY_LOW = 2;
-    const PRIORITY_MIN = 1;
+    public const PRIORITY_URGENT = 5;
+    public const PRIORITY_HIGH = 4;
+    public const PRIORITY_DEFAULT = 3;
+    public const PRIORITY_LOW = 2;
+    public const PRIORITY_MIN = 1;
 
     public function __construct(array $options = [])
     {
@@ -28,6 +29,7 @@ final class NtfyOptions implements MessageOptionsInterface
         $options->setMessage($notification->getContent());
         $options->setStringPriority($notification->getImportance());
         $options->addTag($notification->getEmoji());
+
         return $options;
     }
 
@@ -44,12 +46,14 @@ final class NtfyOptions implements MessageOptionsInterface
     public function setMessage(string $message): self
     {
         $this->options['message'] = $message;
+
         return $this;
     }
 
     public function setTitle(string $title): self
     {
         $this->options['title'] = $title;
+
         return $this;
     }
 
@@ -69,82 +73,101 @@ final class NtfyOptions implements MessageOptionsInterface
 
     public function setPriority(int $priority): self
     {
-        if (in_array($priority, [
-            self::PRIORITY_MIN, self::PRIORITY_LOW, self::PRIORITY_DEFAULT, self::PRIORITY_HIGH, self::PRIORITY_URGENT, self::PRIORITY_MAX
+        if (\in_array($priority, [
+            self::PRIORITY_MIN, self::PRIORITY_LOW, self::PRIORITY_DEFAULT, self::PRIORITY_HIGH, self::PRIORITY_URGENT,
         ])) {
             $this->options['priority'] = $priority;
         }
+
         return $this;
     }
 
     public function addTag(string $tag): self
     {
         $this->options['tags'][] = $tag;
+
         return $this;
     }
 
     public function setTags(array $tags): self
     {
         $this->options['tags'] = $tags;
+
         return $this;
     }
 
     public function setDelay(\DateTimeInterface $dateTime): self
     {
-        $this->options['delay'] = $dateTime->getTimestamp();
+        if ($dateTime > (new \DateTime())) {
+            $this->options['delay'] = (string) $dateTime->getTimestamp();
+        } else {
+            throw new LogicException('Delayed date must be defined in the future.');
+        }
+
         return $this;
     }
 
     public function setActions(array $actions): self
     {
         $this->options['actions'] = $actions;
+
         return $this;
     }
 
     public function addAction(array $action): self
     {
         $this->options['actions'][] = $action;
+
         return $this;
     }
 
     public function setClick(string $url): self
     {
         $this->options['click'] = $url;
+
         return $this;
     }
 
     public function setAttachment(string $attachment): self
     {
         $this->options['attach'] = $attachment;
+
         return $this;
     }
 
     public function setFilename(string $filename): self
     {
         $this->options['filename'] = $filename;
+
         return $this;
     }
 
     public function setEmail(string $email): self
     {
         $this->options['email'] = $email;
+
         return $this;
     }
 
-    public function setCache(bool $enable)
+    public function setCache(bool $enable): self
     {
         if (!$enable) {
             $this->options['cache'] = 'no';
         } else {
             unset($this->options['cache']);
         }
+
+        return $this;
     }
-    public function setFirebase(bool $enable)
+
+    public function setFirebase(bool $enable): self
     {
         if (!$enable) {
             $this->options['firebase'] = 'no';
         } else {
             unset($this->options['firebase']);
         }
+
+        return $this;
     }
 }

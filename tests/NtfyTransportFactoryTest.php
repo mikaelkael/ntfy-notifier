@@ -14,7 +14,7 @@ class NtfyTransportFactoryTest extends TransportFactoryTestCase
         return new NtfyTransportFactory();
     }
 
-    public function createProvider(): iterable
+    public static function createProvider(): iterable
     {
         yield [
             'ntfy://ntfy.sh/test',
@@ -26,13 +26,13 @@ class NtfyTransportFactoryTest extends TransportFactoryTestCase
         ];
     }
 
-    public function supportsProvider(): iterable
+    public static function supportsProvider(): iterable
     {
         yield [true, 'ntfy://default/test'];
         yield [false, 'somethingElse://default/test'];
     }
 
-    public function unsupportedSchemeProvider(): iterable
+    public static function unsupportedSchemeProvider(): iterable
     {
         yield ['somethingElse://default/test'];
     }
