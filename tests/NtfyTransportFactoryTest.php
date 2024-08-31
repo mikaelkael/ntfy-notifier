@@ -21,6 +21,10 @@ class NtfyTransportFactoryTest extends TransportFactoryTestCase
             'ntfy://user:password@default/test',
         ];
         yield [
+            'ntfy://ntfy.sh/test',
+            'ntfy://:password@default/test',
+        ];
+        yield [
             'ntfy://ntfy.sh:8888/test',
             'ntfy://user:password@default:8888/test?secureHttp=off',
         ];
