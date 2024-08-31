@@ -2,14 +2,14 @@ Ntfy Notifier
 =============
 
 [![Build Status](https://github.com/mikaelkael/ntfy-notifier/workflows/Build/badge.svg)](https://github.com/mikaelkael/ntfy-notifier/actions)
-[![License](https://poser.pugx.org/mikaelkael/ntfy-notifier/license.png)](https://packagist.org/packages/mikaelkael/ntfy-notifier)
+[![License](https://poser.pugx.org/mikaelkael/ntfy-notifier/license)](https://packagist.org/packages/mikaelkael/ntfy-notifier)
 
 Provides [Ntfy](https://docs.ntfy.sh/) integration for Symfony Notifier. The component should be introduced in Symfony 6.4 with this [PR #50131](https://github.com/symfony/symfony/pull/50131). This bundle provides same functionalities for Symfony 5.4.x to 6.3.x.
 
 DSN example
 -----------
 
-```
+```dotenv
 # .env
 NTFY_DSN=ntfy://[USER:PASSWORD]@default[:PORT]/TOPIC?[secureHttp=[on]]
 ```
@@ -26,7 +26,7 @@ In case of a non-secure server, you can disable https by setting `secureHttp=off
 Enable texter
 -------------
 
-```
+```yaml
 # config/packages/notifier.yaml
 framework:
     notifier:
@@ -37,7 +37,7 @@ framework:
 Send push message
 -----------------
 
-```
+```php
 // src/Controller/TestController.php
 namespace App\Controller;
 
