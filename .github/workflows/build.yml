@@ -76,4 +76,4 @@ jobs:
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         run: vendor/bin/phpunit
       - name: Stop ntfy
-        run: docker compose down -d
+        run: docker compose down
