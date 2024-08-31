@@ -3,7 +3,9 @@
 namespace Mkk\NtfyBundle\Tests;
 
 use Mkk\NtfyBundle\Transport\NtfyTransport;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\NativeHttpClient;
 use Symfony\Component\Notifier\Message\MessageInterface;
 use Symfony\Component\Notifier\Message\PushMessage;
 use Symfony\Component\Notifier\Message\SmsMessage;
@@ -111,7 +113,7 @@ class NtfyTransportTest extends TransportTestCase
 
         $client = new MockHttpClient(function (string $method, string $url, array $options = []) use ($response): ResponseInterface {
             $expectedBody = \json_encode(['topic' => 'test', 'title' => 'Hello', 'message' => 'World']);
-            $expectedAuthorization = 'Authorization: Basic dGVzdF91c2VyOnRlc3RfcGFzc3dvcmQ';
+            $expectedAuthorization = 'Authorization: Basic dGVzdF91c2VyOnRlc3RfcGFzc3dvcmQ=';
             $this->assertJsonStringEqualsJsonString($expectedBody, $options['body']);
             $this->assertTrue(\in_array($expectedAuthorization, $options['headers']));
 
@@ -123,5 +125,18 @@ class NtfyTransportTest extends TransportTestCase
         $sentMessage = $transport->send(new PushMessage('Hello', 'World'));
 
         $this->assertSame('2BYIwRmvBKcv', $sentMessage->getMessageId());
+    }
+
+    public function testSendWithUserAndPasswordToRealServer(): void
+    {
+        $transport = new NtfyTransport('test', false, new NativeHttpClient());
+        $transport->setHost('127.0.0.1')
+            ->setPort(8080)
+            ->setUser('test_user')
+            ->setPassword('test_password');
+
+        $sentMessage = $transport->send(new PushMessage('Hello', 'World'));
+
+        $this->assertNotNull($sentMessage->getMessageId());
     }
 }

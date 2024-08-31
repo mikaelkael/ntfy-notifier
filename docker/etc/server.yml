@@ -1,0 +1,5 @@
+base-url: http://127.0.0.1:8080
+cache-file: "/var/cache/ntfy/cache.db"
+attachment-cache-dir: "/var/cache/ntfy/attachments"
+auth-file: "/etc/ntfy/user.db"
+auth-default-access: "deny-all"

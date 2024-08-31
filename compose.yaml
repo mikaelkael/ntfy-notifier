@@ -1,0 +1,11 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy
+    container_name: ntfy
+    command:
+      - serve
+    volumes:
+      - ./docker/cache:/var/cache/ntfy
+      - ./docker/etc:/etc/ntfy
+    ports:
+      - 8080:80
